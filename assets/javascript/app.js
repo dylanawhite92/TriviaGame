@@ -178,24 +178,17 @@ $(document).ready(function() {
             };
         }, 3000);
     };
-    
-    // old starter code
-    // function renderButtons() {
-        
-    // };
 
+    $("#reset").on("click", function() {
+        $("#reset").hide();
+        $("#answer-section").empty();
+        $("#question-section").empty();
 
+        for (var i = 0; i < holder.length; i++) {
+            triviaQuestions.push(holder[i]);
+        }
 
-
-    // function updateScore() {
-
-    // };
-
-    // function gameOverScreen() {
-    //     $("#trivia-section").empty();
-    //     $("#game-over-screen").append(`Correct Answers: ${correctAnswers}`);
-    //     $("#game-over-screen").append(`Wrong Answers: ${wrongAnswers}`);
-    //     $("#game-over-screen").append(`Unanswered Questions: ${unansweredQuestions}`);
-    // };
-
+        runTimer();
+        renderQuestion();
+    });
 });
