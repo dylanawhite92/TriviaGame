@@ -3,12 +3,6 @@ $(document).ready(function() {
     // Array of our trivia questions with true or false answers
     var triviaQuestions = [
         { 
-            question: "There are 365 days in a year.",
-            choices: ["True", "False"],
-            answer: 0,
-            photo: "assets/images/newyear.jpg"
-        },
-        { 
             question: "On a farm, a kid is a baby goat.", 
             choices: ["True", "False"],
             answer: 0,
@@ -31,12 +25,6 @@ $(document).ready(function() {
             choices: ["True", "False"], 
             answer: 1,
             photo: "assets/images/woody.gif"
-        },
-        { 
-            question: "Pharoah is the title given to the leader of the United States of America.",
-            choices: ["True", "False"],
-            answer: 1,
-            photo: "assets/images/pharaoh.jpg"
         },
         { 
             question: "Baloo was the name of the bear in The Jungle Book.",
@@ -85,7 +73,7 @@ $(document).ready(function() {
     $("#start").on("click", function() {
         $("#start").hide();
         runTimer();
-        renderQuestions();
+        renderQuestion();
         
         for (var i = 0; i < triviaQuestions.length; i++) {
             holder.push(triviaQuestions[i]);
@@ -123,12 +111,9 @@ $(document).ready(function() {
         clearInterval(intervalId);
     };
 
-
-
-
     // Renders questions on the screen
-    function renderQuestions() {
-
+    function renderQuestion() {
+        // Generates random index out of the questions and displays it on the screen
         index = Math.floor(Math.random() * triviaQuestions.length);
         pick = triviaQuestions[index];
 
@@ -143,32 +128,74 @@ $(document).ready(function() {
             $("#answer-section").append(userChoice);
         };
 
-        // A different, non-random version of the display to work out
-        // $("#question-section").html(`<h2>${pick.question}</h2>`);
+        $(".answer-choice").on("click", function () {
+            // Grab array position from userGuess
+            userGuess = parseInt($(this).attr("data-guess-value"));
 
-        //  for (i = 0; i <= triviaQuestions.length; i++) {
-        //     $("#trivia-section").append(triviaQuestions[i]);
-        // };
+            // If statement for right/wrong outcomes
+            if (userGuess === pick.answer) {
+                stop();
+
+                correctAnswers++;
+                userGuess = "";
+
+                $("#answer-section").html("<p>Correct!</p>");
+                hidePicture();
+            }
+            else {
+                stop();
+
+                wrongAnswers++;
+                userGuess = "";
+                $("#answer-section").html(`<p>Wrong!! The correct answer is: ${pick.choices[pick.answer]}</p>`)
+                hidePicture();
+            };
+        });
     };
 
+    function hidePicture() {
+        $("#answer-section").append(`<img src = ${pick.photo} >`);
 
+        newArray.push(pick);
+        triviaQuestions.splice(index, 1);
 
-    function renderButtons() {
+        var hidpic = setTimeout(function() {
+            $("#answer-section").empty();
+            timeCounter = 30;
+
+            // Run the end game screen if all questions are answered
+            if ((wrongAnswers + correctAnswers + unansweredQuestions) === questionCount) {
+                $("#question-section").empty();
+                $("#question-section").html("<h3>Game Over! Here's How You Did: </h3>");
+                $("#answer-section").append(`<h4>Correct: ${correctAnswers}</h4>`);
+                $("#answer-section").append(`<h4>Incorrect: ${wrongAnswers}</h4>`);
+                $("#answer-section").append(`<h4>Unanswered: ${unansweredQuestions}</h4>`);
+                $("#reset").show();            
+            }
+            else {
+                runTimer();
+                renderQuestion();
+            };
+        }, 3000);
+    };
+    
+    // old starter code
+    // function renderButtons() {
         
-    };
+    // };
 
 
 
 
-    function updateScore() {
+    // function updateScore() {
 
-    };
+    // };
 
-    function gameOverScreen() {
-        $("#trivia-section").empty();
-        $("#game-over-screen").append(`Correct Answers: ${correctAnswers}`);
-        $("#game-over-screen").append(`Wrong Answers: ${wrongAnswers}`);
-        $("#game-over-screen").append(`Unanswered Questions: ${unansweredQuestions}`);
-    };
+    // function gameOverScreen() {
+    //     $("#trivia-section").empty();
+    //     $("#game-over-screen").append(`Correct Answers: ${correctAnswers}`);
+    //     $("#game-over-screen").append(`Wrong Answers: ${wrongAnswers}`);
+    //     $("#game-over-screen").append(`Unanswered Questions: ${unansweredQuestions}`);
+    // };
 
 });
